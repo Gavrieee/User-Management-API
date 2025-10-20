@@ -148,6 +148,17 @@ function handleLoginPage() {
       const data = await resp.json();
 
       if (data.status === "success") {
+        // session flag for index to show welcome popup
+        try {
+          const displayName =
+            data.user && data.user.username ? data.user.username : username;
+          sessionStorage.setItem("loginSuccess", "1");
+          sessionStorage.setItem("username", displayName);
+        } catch (e) {
+          console.warn("sessionStorage not available", e);
+        }
+
+        // redirect to index show the popup there
         window.location = "index.php";
       } else {
         Swal.fire({
@@ -169,6 +180,22 @@ function handleLoginPage() {
 
 // INDEX PAGE HANDLER (LOGOUT)
 function handleIndexPage() {
+  const loginSuccess = sessionStorage.getItem("loginSuccess");
+  const username = sessionStorage.getItem("username");
+  if (loginSuccess) {
+    Swal.fire({
+      icon: "success",
+      title: "Login successful!",
+      text: `Welcome back, ${username || "user"}!`,
+      showConfirmButton: false,
+      timer: 2000,
+    });
+
+    // Clear the flag so it won’t show again
+    sessionStorage.removeItem("loginSuccess");
+    sessionStorage.removeItem("username");
+  }
+
   const logoutBtn = document.getElementById("logoutBtn");
   if (!logoutBtn) return; // only run if on index.php
 

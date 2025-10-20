@@ -159,7 +159,7 @@ switch ($action) {
         $ins = $pdo->prepare("INSERT INTO users (username, firstname, lastname, is_admin, password) VALUES (:u,:f,:l,:a,:p)");
         $ins->execute(['u' => $username, 'f' => $firstname, 'l' => $lastname, 'a' => $is_admin, 'p' => $hash]);
 
-        json_res(['status' => 'success', 'message' => 'User added']);
+        json_res(['status' => 'success', 'message' => 'This user has successfully been added']);
 
     default:
         json_res(['status' => 'error', 'message' => 'Unknown action']);
